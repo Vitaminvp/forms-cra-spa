@@ -1,5 +1,5 @@
 import React from "react";
-import Logo from "../img/avatar.svg";
+import Logo from "./Logo";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import { Container } from "@material-ui/core";
@@ -39,7 +39,7 @@ const Profile = withRouter(
                   }}
                 >
                   <Typography component="div">
-                    <img src={Logo} className="App-logo" alt="logo" />
+                    <Logo />
                   </Typography>
                 </div>
               </Paper>

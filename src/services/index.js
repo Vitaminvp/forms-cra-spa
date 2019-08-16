@@ -22,8 +22,8 @@ class AuthProvider extends Component {
 
     this.auth0 = new auth0.WebAuth({
       domain: "dev-89anh0xa.eu.auth0.com",
-      clientID: "ytWgl3QewGPM7B0zGYjnbMYQiHMCqSY6",
-      redirectUri: "http://localhost:8080/callback",
+      clientID: "ECT1pZO1AJkk0FgmJCJpjXBQrhXKWCjv",
+      redirectUri: "https://forms-spa.herokuapp.com/callback",
       responseType: "token id_token",
       scope: "openid profile"
     });
@@ -40,7 +40,7 @@ class AuthProvider extends Component {
 
       this.auth0.logout({
         returnTo: "",
-        clientID: "ytWgl3QewGPM7B0zGYjnbMYQiHMCqSY6"
+        clientID: "ECT1pZO1AJkk0FgmJCJpjXBQrhXKWCjv"
       });
     });
 
@@ -80,12 +80,9 @@ class AuthProvider extends Component {
     const expiresAt = JSON.stringify(
       authResult.expiresIn * 1000 + new Date().getTime()
     );
-
     Cookies.set("user", authResult.idTokenPayload);
     Cookies.set("jwt", authResult.idToken);
     Cookies.set("expiresAt", expiresAt);
-
-    // history.replace("/");
   }
 
   render() {
