@@ -8,32 +8,52 @@ import { LOADING_FORMS } from "../constants/loading";
 import { isLoaded } from "../reducers/loading";
 import { DragDropContext } from "react-beautiful-dnd";
 import ShortList from "../components/List";
-
-import { CssBaseline, Container } from "@material-ui/core";
+import SearchIcon from '@material-ui/icons/Search';
+import { CssBaseline, Container, InputBase, Paper, IconButton } from "@material-ui/core";
 import CircularDeterminate from "../components/CircularDeterminate";
 import PrintPDF from "../components/PrintPDF";
 import { langSelector } from "../reducers/lang";
 import { withAuth } from "../services";
 import Tooltip from "../components/ToolTip";
 import Pagination from "../components/Pagination";
+import {FORMS_PER_PAGE} from "../constants/common";
+
 
 class FormsList extends Component {
   state = {
-    pageOfItems: [],
+    allForms: [],
+    currentForms: [],
+    currentPage: null,
+    totalPages: null,
+    search: ""
   };
 
-  onChangePage = pageOfItems => {
-    // update state with new page of items
-    this.setState({ pageOfItems: pageOfItems });
+  onPageChanged = data => {
+    const { allForms } = this.state;
+    const { currentPage, totalPages, pageLimit } = data;
+
+    const offset = (currentPage - 1) * pageLimit;
+    const currentForms = allForms.slice(offset, offset + pageLimit);
+
+    this.setState({ currentPage, currentForms, totalPages });
   };
+
+  componentWillReceiveProps(nextProps, nextContext) {
+    const {forms} = nextProps;
+    this.setState({allForms: forms});
+  }
 
   componentDidMount() {
     if (!this.props.isFormsLoaded) {
-      this.props.getForms();
+      this.props.getForms()
     }
+    this.setState({allForms: this.props.forms})
   }
   onDragEnd = result => {
     const { destination, source } = result;
+    console.log({result})
+
+    const {currentPage, currentForms} =this.state;
     if (!destination) return;
     if (
       destination.droppableId === source.droppableId &&
@@ -43,21 +63,80 @@ class FormsList extends Component {
     }
     const { forms } = this.props;
     const newForms = [...forms];
-    const item = newForms.splice(source.index, 1);
-    newForms.splice(destination.index, 0, item[0]);
+    const newCurrentForms = [...currentForms];
+
+
+    const src = currentPage <= 1 ? source.index : source.index + FORMS_PER_PAGE*(currentPage - 1);
+    const dest = currentPage <= 1 ? destination.index : destination.index + FORMS_PER_PAGE*(currentPage - 1);
+
+    console.log("source", src);
+    console.log("destination", dest);
+
+    const item = newForms.splice(src, 1);
+    newForms.splice(dest, 0, item[0]);
+
+    const currentItem = newCurrentForms.splice(source.index, 1);
+    newCurrentForms.splice(destination.index, 0, currentItem[0]);
+
+    this.setState({currentForms: newCurrentForms})
     this.props.setFormsData(newForms);
   };
+
+  handleSearch = e => {
+    const {allForms} = this.state;
+
+    const newForms = allForms.filter(item => item.name.includes(e.target.value));
+    console.log(newForms)
+    // this.setState({ currentPage, currentForms, totalPages });
+    const currentForms = newForms.length > FORMS_PER_PAGE
+            ? newForms.slice(0, FORMS_PER_PAGE) :
+              newForms.length === 0 ?
+              allForms.slice(0, FORMS_PER_PAGE) : null
+    this.setState({
+          allForms: newForms,
+          currentPage: 1,
+          search: e.target.value,
+          currentForms
+        },
+        () => console.log(this.state))
+  };
+
   render() {
-    const { forms, value, addForm, isAuthorized } = this.props;
+    const { value, addForm, isAuthorized } = this.props;
+    const {
+      allForms,
+      currentForms,
+    } = this.state;
+
+    const totalForms = allForms.length;
 
     if (!this.props.isFormsLoaded) {
       return <CircularDeterminate />;
     }
+
+    //const formsList = forms.filter(item => item.name.includes(this.state.search))
+    console.log("render")
     return (
       <DragDropContext onDragEnd={this.onDragEnd}>
         <Tooltip text="Downloading PDF file">
           <PrintPDF />
         </Tooltip>
+
+
+        <Paper style={{maxWidth: 250, margin: "10px auto"}} >
+
+          <InputBase
+              placeholder="Search forms"
+              inputProps={{ 'aria-label': 'search forms' }}
+              onChange={this.handleSearch}
+          />
+          <IconButton  aria-label="search">
+            <SearchIcon />
+          </IconButton>
+
+        </Paper>
+
+
         <CssBaseline />
         <Container
           maxWidth="sm"
@@ -68,9 +147,14 @@ class FormsList extends Component {
             marginBottom: 20,
           }}
         >
-          <ShortList forms={this.state.pageOfItems} isAuthorized={isAuthorized} />
+          <ShortList forms={currentForms} isAuthorized={isAuthorized} />
 
-          <Pagination items={forms} onChangePage={this.onChangePage} />
+          <Pagination
+              totalRecords={totalForms}
+              pageLimit={FORMS_PER_PAGE}
+              pageNeighbours={1}
+              onPageChanged={this.onPageChanged}
+          />
 
           {isAuthorized && <AddForm onAddForm={addForm} val={value} />}
         </Container>
@@ -78,6 +162,9 @@ class FormsList extends Component {
     );
   }
 }
+
+
+
 FormsList.propTypes = {
   forms: PropTypes.array,
   lang: PropTypes.object,
