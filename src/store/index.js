@@ -4,7 +4,7 @@ import { loadState, saveState } from "../localStorage";
 // import { save, load } from "redux-localstorage-simple";
 
 export const configStore = (reducers, middlewares) => {
-  const preLoadedState = loadState();
+  const preLoadedState = loadState("state");
 
   // const createStoreWithMiddleware = applyMiddleware(
   //   save()
@@ -25,7 +25,7 @@ export const configStore = (reducers, middlewares) => {
     throttle(() => {
       saveState({
         lang: store.getState().lang
-      });
+      }, "state");
     }, 1000)
   );
   return store;

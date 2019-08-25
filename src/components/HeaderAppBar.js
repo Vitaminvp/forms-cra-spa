@@ -59,13 +59,12 @@ const HeaderAppBar = withAuth(
     }
     const token = Cookies.getJSON("jwt");
     const user = isAuthorized ? jwt.decode(token) : undefined;
-    if(user){
-        const expiresAt = user.exp * 1000;
-        if (Date.now() > expiresAt) {
-            logout(history)
-        }
+    if (user) {
+      const expiresAt = user.exp * 1000;
+      if (Date.now() > expiresAt) {
+        logout(history);
+      }
     }
-
 
     return (
       <div className={classes.root}>

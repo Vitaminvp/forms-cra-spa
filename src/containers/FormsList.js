@@ -8,25 +8,41 @@ import { LOADING_FORMS } from "../constants/loading";
 import { isLoaded } from "../reducers/loading";
 import { DragDropContext } from "react-beautiful-dnd";
 import ShortList from "../components/List";
-import SearchIcon from '@material-ui/icons/Search';
-import { CssBaseline, Container, InputBase, Paper, IconButton } from "@material-ui/core";
+import SearchIcon from "@material-ui/icons/Search";
+import {
+  CssBaseline,
+  Container,
+  InputBase,
+  Paper,
+  IconButton
+} from "@material-ui/core";
 import CircularDeterminate from "../components/CircularDeterminate";
 import PrintPDF from "../components/PrintPDF";
 import { langSelector } from "../reducers/lang";
 import { withAuth } from "../services";
 import Tooltip from "../components/ToolTip";
 import Pagination from "../components/Pagination";
-import {FORMS_PER_PAGE} from "../constants/common";
-
+import { FORMS_PER_PAGE } from "../constants/common";
+import {loadState, saveState} from "../localStorage";
 
 class FormsList extends Component {
-  state = {
-    allForms: [],
-    currentForms: [],
-    currentPage: null,
-    totalPages: null,
-    search: ""
-  };
+  constructor(props){
+    super(props);
+
+    const preLoadedState = loadState("pagination");
+    if (!preLoadedState) {
+      this.state = {
+        allForms: [],
+        currentForms: [],
+        currentPage: null,
+        totalPages: null,
+        search: ""
+      };
+    } else {
+      this.state ={...preLoadedState}
+    }
+  }
+
 
   onPageChanged = data => {
     const { allForms } = this.state;
@@ -38,22 +54,26 @@ class FormsList extends Component {
     this.setState({ currentPage, currentForms, totalPages });
   };
 
+  // static getDerivedStateFromProps(props, state) {
+  //
+  // }
+
   componentWillReceiveProps(nextProps, nextContext) {
-    const {forms} = nextProps;
-    this.setState({allForms: forms});
+    const { forms } = nextProps;
+    this.setState({ allForms: forms });
   }
 
   componentDidMount() {
     if (!this.props.isFormsLoaded) {
-      this.props.getForms()
+      this.props.getForms();
     }
-    this.setState({allForms: this.props.forms})
+    this.setState({ allForms: this.props.forms });
   }
   onDragEnd = result => {
     const { destination, source } = result;
-    console.log({result})
+    console.log({ result });
 
-    const {currentPage, currentForms} =this.state;
+    const { currentPage, currentForms } = this.state;
     if (!destination) return;
     if (
       destination.droppableId === source.droppableId &&
@@ -62,51 +82,57 @@ class FormsList extends Component {
       return;
     }
     const { forms } = this.props;
+    const { allForms } = this.state;
     const newForms = [...forms];
     const newCurrentForms = [...currentForms];
 
+    if (allForms.length === forms.length) {
+      const src =
+        currentPage <= 1
+          ? source.index
+          : source.index + FORMS_PER_PAGE * (currentPage - 1);
+      const dest =
+        currentPage <= 1
+          ? destination.index
+          : destination.index + FORMS_PER_PAGE * (currentPage - 1);
 
-    const src = currentPage <= 1 ? source.index : source.index + FORMS_PER_PAGE*(currentPage - 1);
-    const dest = currentPage <= 1 ? destination.index : destination.index + FORMS_PER_PAGE*(currentPage - 1);
-
-    console.log("source", src);
-    console.log("destination", dest);
-
-    const item = newForms.splice(src, 1);
-    newForms.splice(dest, 0, item[0]);
+      const item = newForms.splice(src, 1);
+      newForms.splice(dest, 0, item[0]);
+      this.props.setFormsData(newForms);
+    }
 
     const currentItem = newCurrentForms.splice(source.index, 1);
     newCurrentForms.splice(destination.index, 0, currentItem[0]);
 
-    this.setState({currentForms: newCurrentForms})
-    this.props.setFormsData(newForms);
+    this.setState({ currentForms: newCurrentForms });
   };
 
   handleSearch = e => {
-    const {allForms} = this.state;
+    const { forms } = this.props;
 
-    const newForms = allForms.filter(item => item.name.includes(e.target.value));
-    console.log(newForms)
-    // this.setState({ currentPage, currentForms, totalPages });
-    const currentForms = newForms.length > FORMS_PER_PAGE
-            ? newForms.slice(0, FORMS_PER_PAGE) :
-              newForms.length === 0 ?
-              allForms.slice(0, FORMS_PER_PAGE) : null
+    const newForms = forms.filter(item =>
+      item.name.toLowerCase().includes(e.target.value.toLowerCase())
+    );
+    const currentForms =
+      newForms.length > FORMS_PER_PAGE
+        ? newForms.slice(0, FORMS_PER_PAGE)
+        : [...newForms];
+
     this.setState({
-          allForms: newForms,
-          currentPage: 1,
-          search: e.target.value,
-          currentForms
-        },
-        () => console.log(this.state))
+      allForms: newForms,
+      currentPage: 2,
+      search: e.target.value,
+      currentForms
+    });
   };
+
+  componentWillUnmount() {
+    saveState(this.state, "pagination");
+  }
 
   render() {
     const { value, addForm, isAuthorized } = this.props;
-    const {
-      allForms,
-      currentForms,
-    } = this.state;
+    const { allForms, currentForms } = this.state;
 
     const totalForms = allForms.length;
 
@@ -114,28 +140,22 @@ class FormsList extends Component {
       return <CircularDeterminate />;
     }
 
-    //const formsList = forms.filter(item => item.name.includes(this.state.search))
-    console.log("render")
     return (
       <DragDropContext onDragEnd={this.onDragEnd}>
         <Tooltip text="Downloading PDF file">
           <PrintPDF />
         </Tooltip>
 
-
-        <Paper style={{maxWidth: 250, margin: "10px auto"}} >
-
+        <Paper style={{ maxWidth: 250, margin: "10px auto" }}>
           <InputBase
-              placeholder="Search forms"
-              inputProps={{ 'aria-label': 'search forms' }}
-              onChange={this.handleSearch}
+            placeholder="Search forms"
+            inputProps={{ "aria-label": "search forms" }}
+            onChange={this.handleSearch}
           />
-          <IconButton  aria-label="search">
+          <IconButton aria-label="search">
             <SearchIcon />
           </IconButton>
-
         </Paper>
-
 
         <CssBaseline />
         <Container
@@ -144,16 +164,16 @@ class FormsList extends Component {
             background: "#eaeaea",
             padding: 20,
             borderRadius: 5,
-            marginBottom: 20,
+            marginBottom: 20
           }}
         >
           <ShortList forms={currentForms} isAuthorized={isAuthorized} />
 
           <Pagination
-              totalRecords={totalForms}
-              pageLimit={FORMS_PER_PAGE}
-              pageNeighbours={1}
-              onPageChanged={this.onPageChanged}
+            totalRecords={totalForms}
+            pageLimit={FORMS_PER_PAGE}
+            pageNeighbours={1}
+            onPageChanged={this.onPageChanged}
           />
 
           {isAuthorized && <AddForm onAddForm={addForm} val={value} />}
@@ -163,8 +183,6 @@ class FormsList extends Component {
   }
 }
 
-
-
 FormsList.propTypes = {
   forms: PropTypes.array,
   lang: PropTypes.object,
@@ -172,19 +190,19 @@ FormsList.propTypes = {
   addForm: PropTypes.func,
   isFormsLoaded: PropTypes.bool,
   isAuthorized: PropTypes.bool,
-  setFormsData: PropTypes.func,
+  setFormsData: PropTypes.func
 };
 
 const mapStateToProps = state => ({
   forms: contactsSelector(state),
   isFormsLoaded: isLoaded(state, LOADING_FORMS),
-  lang: langSelector(state),
+  lang: langSelector(state)
 });
 
 const mapDispatchToProps = {
   addForm: addFormData,
   getForms: getFormsAction,
-  setFormsData,
+  setFormsData
 };
 
 export default withAuth(

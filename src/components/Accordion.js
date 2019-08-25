@@ -11,15 +11,21 @@ export function AccordionItem(props) {
     },
     buttonStyle: {
       display: "block",
-      width: "100%"
+      width: "100%",
+    },
+    buttonStyleCollapsed: {
+      display: "block",
+      width: "100%",
+      backgroundColor: "#888",
+      color: "white",
+      cursor: "auto"
     }
   };
 
   return (
     <div>
-      <Button variant="outlined" style={style.buttonStyle} onClick={() => props.handleClick()}>
+      <Button variant="outlined" style={props.isCollapsed ? style.buttonStyleCollapsed : style.buttonStyle} onClick={() => props.handleClick()}>
         <FormattedMessage id={props.label} defaultMessage="Accordion tab" />
-
       </Button>
 
       <div

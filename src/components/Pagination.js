@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import {Button, ButtonGroup} from "@material-ui/core";
+import { Button, ButtonGroup } from "@material-ui/core";
 
 const LEFT_PAGE = "LEFT";
 const RIGHT_PAGE = "RIGHT";
@@ -20,18 +20,6 @@ const range = (from, to, step = 1) => {
 class Pagination extends Component {
   constructor(props) {
     super(props);
-    const { totalRecords = null, pageLimit = 30, pageNeighbours = 0 } = props;
-
-    this.pageLimit = typeof pageLimit === "number" ? pageLimit : 30;
-    this.totalRecords = typeof totalRecords === "number" ? totalRecords : 0;
-
-    this.pageNeighbours =
-        typeof pageNeighbours === "number"
-            ? Math.max(0, Math.min(pageNeighbours, 2))
-            : 0;
-
-    this.totalPages = Math.ceil(this.totalRecords / this.pageLimit);
-
     this.state = { currentPage: 1 };
   }
 
@@ -115,55 +103,64 @@ class Pagination extends Component {
   };
 
   render() {
-    if (!this.totalRecords) return null;
+    const {
+      totalRecords = null,
+      pageLimit = 30,
+      pageNeighbours = 0
+    } = this.props;
 
-    if (this.totalPages === 1) return null;
+    this.pageLimit = typeof pageLimit === "number" ? pageLimit : 30;
+    this.totalRecords = typeof totalRecords === "number" ? totalRecords : 0;
+
+    this.pageNeighbours =
+      typeof pageNeighbours === "number"
+        ? Math.max(0, Math.min(pageNeighbours, 2))
+        : 0;
+
+    this.totalPages = Math.ceil(this.totalRecords / this.pageLimit);
+
+    if (!this.totalRecords || this.totalPages === 1) return null;
 
     const { currentPage } = this.state;
     const pages = this.fetchPageNumbers();
 
     return (
-        <ButtonGroup
-            style={{marginTop: 15}}
-            variant="contained"
-            size="small"
-            aria-label="small contained button group"
-        >
-              {pages.map((page, index) => {
-                if (page === LEFT_PAGE)
-                  return (
-                      <Button
-                          key={index}
-                          onClick={this.handleMoveLeft}
-                      >
-                        Previous
-                      </Button>
-                  );
+      <ButtonGroup
+        style={{ marginTop: 15 }}
+        variant="contained"
+        size="small"
+        aria-label="small contained button group"
+      >
+        {pages.map((page, index) => {
+          if (page === LEFT_PAGE)
+            return (
+              <Button key={index} onClick={this.handleMoveLeft}>
+                Previous
+              </Button>
+            );
 
-                if (page === RIGHT_PAGE)
-                  return (
+          if (page === RIGHT_PAGE)
+            return (
+              <Button key={index} onClick={this.handleMoveRight}>
+                Next
+              </Button>
+            );
 
-                        <Button
-                               key={index}
-                            onClick={this.handleMoveRight}
-                        >
-                          Next
-                        </Button>
-
-                  );
-
-                return (
-                          <Button
-                              key={index}
-                              style={currentPage === page ? {backgroundColor: "#f50057", color: "white"} : {}}
-                              onClick={e => this.handleClick(page,e)}
-                          >
-                            {page}
-                          </Button>
-
-                );
-              })}
-        </ButtonGroup>
+          return (
+            <Button
+              key={index}
+              style={
+                currentPage === page
+                  ? { backgroundColor: "#f50057", color: "white" }
+                  : {}
+              }
+              onClick={e => this.handleClick(page, e)}
+            >
+              {page}
+            </Button>
+          );
+        })}
+      </ButtonGroup>
     );
   }
 }
