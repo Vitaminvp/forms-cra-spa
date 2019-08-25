@@ -1,0 +1,1 @@
+{"version":3,"sources":["styles.css"],"names":[],"mappings":"AAAA,KACI,QACJ,CAEA,GACE,aACF,CACA,GACE,aACF","file":"main.4845f556.chunk.css","sourcesContent":["body {\n    margin: 0;\n}\n\nh2 {\n  color: #3f51b5;\n}\nh3 {\n  color: #f50057;\n}\n"]}

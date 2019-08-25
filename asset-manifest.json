@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/forms-cra-spa/static/css/main.4845f556.chunk.css",
+    "main.js": "/forms-cra-spa/static/js/main.62310a3d.chunk.js",
+    "main.js.map": "/forms-cra-spa/static/js/main.62310a3d.chunk.js.map",
+    "runtime~main.js": "/forms-cra-spa/static/js/runtime~main.d61ae950.js",
+    "runtime~main.js.map": "/forms-cra-spa/static/js/runtime~main.d61ae950.js.map",
+    "static/js/2.a3689a4d.chunk.js": "/forms-cra-spa/static/js/2.a3689a4d.chunk.js",
+    "static/js/2.a3689a4d.chunk.js.map": "/forms-cra-spa/static/js/2.a3689a4d.chunk.js.map",
+    "index.html": "/forms-cra-spa/index.html",
+    "precache-manifest.7dc25b08233ccf1aa5f686330a27dd2b.js": "/forms-cra-spa/precache-manifest.7dc25b08233ccf1aa5f686330a27dd2b.js",
+    "service-worker.js": "/forms-cra-spa/service-worker.js",
+    "static/css/main.4845f556.chunk.css.map": "/forms-cra-spa/static/css/main.4845f556.chunk.css.map",
+    "static/media/avatar.d910f2c2.svg": "/forms-cra-spa/static/media/avatar.d910f2c2.svg"
+  }
+}
