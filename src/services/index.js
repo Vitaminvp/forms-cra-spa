@@ -21,10 +21,10 @@ class AuthProvider extends Component {
 
     this.auth0 = new auth0.WebAuth({
       domain: "dev-89anh0xa.eu.auth0.com",
-      // clientID: "ECT1pZO1AJkk0FgmJCJpjXBQrhXKWCjv",
-      // redirectUri: "https://forms-spa.herokuapp.com/callback",
-      clientID: "ytWgl3QewGPM7B0zGYjnbMYQiHMCqSY6",
-      redirectUri: "http://localhost:3000/callback",
+      clientID: "ECT1pZO1AJkk0FgmJCJpjXBQrhXKWCjv",
+      redirectUri: "https://forms-spa.herokuapp.com/callback",
+      // clientID: "ytWgl3QewGPM7B0zGYjnbMYQiHMCqSY6",
+      // redirectUri: "http://localhost:3000/callback",
       responseType: "token id_token",
       scope: "openid profile"
     });
@@ -41,7 +41,7 @@ class AuthProvider extends Component {
 
       this.auth0.logout({
         returnTo: "",
-        clientID: "ytWgl3QewGPM7B0zGYjnbMYQiHMCqSY6"
+        clientID: "ECT1pZO1AJkk0FgmJCJpjXBQrhXKWCjv"
       });
     });
 
