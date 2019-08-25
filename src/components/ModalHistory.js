@@ -32,8 +32,7 @@ const styles = theme => ({
   }
 });
 
-const DialogTitle = withStyles(styles)(props => {
-  const { children, classes, onClose } = props;
+const DialogTitle = withStyles(styles)(({ children, classes, onClose }) => {
   return (
     <MuiDialogTitle disableTypography className={classes.root}>
       <Typography variant="h6">{children}</Typography>
