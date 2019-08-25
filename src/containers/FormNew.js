@@ -9,7 +9,7 @@ import {
   fieldTypeLength,
   formSelector,
   resetForm,
-  setForm
+  setForm, updateName
 } from "../reducers/selectedForm";
 import getFormAction from "../action/getForm";
 import postFormAction from "../action/postForm";
@@ -22,7 +22,7 @@ import CheckMarkPure from "../components/elements/Checkmark";
 import withHOCField from "../components/elements/withHOCField";
 import { FIELD_TYPES } from "../constants/selectedForm";
 import { resetFormsData } from "../reducers/forms";
-import { Button, Container } from "@material-ui/core";
+import {Button, Container, FormControl, FormHelperText, Input, InputLabel} from "@material-ui/core";
 
 const Text = withHOCField(TextPure);
 const Dropdown = withHOCField(DropdownPure);
@@ -30,6 +30,21 @@ const Number = withHOCField(NumberPure);
 const CheckMark = withHOCField(CheckMarkPure);
 
 class FormNew extends Component {
+  state = {
+    name: this.props.form.name,
+    error: false
+  };
+
+  handleNameChange = ({ target }) => {
+    this.setState({
+      name: target.value,
+      error: target.value.length < 4
+    });
+
+    if(target.value.length > 4) {
+      this.props.updateName(target.value);
+    }
+  };
   render() {
     const {
       form,
@@ -45,7 +60,6 @@ class FormNew extends Component {
       postForm
     } = this.props;
     if (!form) return null;
-    console.log("this.props", this.props);
     return (
       <React.Fragment>
         <Container
@@ -59,7 +73,18 @@ class FormNew extends Component {
           }}
         >
           <h1>Form Detail </h1>
-          <h2>{form.name}</h2>
+          <FormControl error={this.state.error}>
+            <InputLabel htmlFor="component-error">Name</InputLabel>
+            <Input
+                id="component-error"
+                value={this.state.name}
+                onChange={this.handleNameChange}
+                aria-describedby="component-error-text"
+            />
+            <FormHelperText id="component-error-text">
+              Min 4 characters
+            </FormHelperText>
+          </FormControl>
           {form.fields.map((field, key) => {
             const props = {
               field,
@@ -111,6 +136,7 @@ class FormNew extends Component {
               variant="contained"
               size="medium"
               color="primary"
+              disabled={this.state.error}
               onClick={() => {
                 resetFormsData();
                 postForm(form);
@@ -163,7 +189,8 @@ const mapDispatchToProps = {
   addField: addFormField,
   deleteField: deleteFormField,
   postForm: postFormAction,
-  resetFormsData
+  resetFormsData,
+  updateName
 };
 
 export default connect(

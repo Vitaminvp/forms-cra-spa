@@ -46,16 +46,19 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const HeaderAppBar = withAuth(
-  withRouter(({ setLang, history, isAuthorized, logout }) => {
+  withRouter(({ setLang, history, isAuthorized, logout, language }) => {
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
     function handleMenu(event) {
       setAnchorEl(event.currentTarget);
     }
-    function handleClose(lang) {
+    function handleClose(lang="en") {
       setAnchorEl(null);
-      setLang(lang);
+      if(typeof lang === "string" && lang !== language){
+        setLang(lang);
+      }
+
     }
     const token = Cookies.getJSON("jwt");
     const user = isAuthorized ? jwt.decode(token) : undefined;

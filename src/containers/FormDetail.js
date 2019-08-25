@@ -10,7 +10,8 @@ import {
   formSelector,
   resetForm,
   setForm,
-  updateFields
+  updateFields,
+  updateName
 } from "../reducers/selectedForm";
 import { withRouter } from "react-router-dom";
 import getFormAction from "../action/getForm";
@@ -23,7 +24,16 @@ import DropdownPure from "../components/elements/Dropdown";
 import CheckMarkPure from "../components/elements/Checkmark";
 import withHOCField from "../components/elements/withHOCField";
 import { FIELD_TYPES } from "../constants/selectedForm";
-import { Container, Button, List, ListItem } from "@material-ui/core";
+import {
+  Container,
+  Button,
+  List,
+  ListItem,
+  FormControl,
+  FormHelperText,
+  InputLabel,
+  Input
+} from "@material-ui/core";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { FormattedMessage } from "react-intl";
 import StarRating from "../components/StarRating";
@@ -35,7 +45,10 @@ const Number = withHOCField(NumberPure);
 const CheckMark = withHOCField(CheckMarkPure);
 
 class FormDetail extends Component {
-
+  state = {
+    name: this.props.form.name,
+    error: false
+  };
   componentDidMount() {
     const { formId } = this.props.match.params;
 
@@ -43,6 +56,11 @@ class FormDetail extends Component {
       this.props.getForm(formId);
     }
   }
+
+  componentWillReceiveProps(nextProps, nextContext) {
+    this.setState({ name: nextProps.form.name });
+  }
+
   onDragEnd = result => {
     const { destination, source } = result;
     if (!destination) return;
@@ -57,7 +75,18 @@ class FormDetail extends Component {
     const item = fields.splice(source.index, 1);
     fields.splice(destination.index, 0, item[0]);
     this.props.updateFields(fields);
-  }
+  };
+
+  handleNameChange = ({ target }) => {
+    this.setState({
+      name: target.value,
+      error: target.value.length < 4
+    });
+
+    if(target.value.length > 4) {
+      this.props.updateName(target.value);
+    }
+  };
   render() {
     const {
       form,
@@ -94,7 +123,19 @@ class FormDetail extends Component {
           }}
         >
           <h1>Form Detail {formId}</h1>
-          <h2>{form.name}</h2>
+          <h2>{this.state.name}</h2>
+          <FormControl error={this.state.error}>
+            <InputLabel htmlFor="component-error">Name</InputLabel>
+            <Input
+              id="component-error"
+              value={this.state.name}
+              onChange={this.handleNameChange}
+              aria-describedby="component-error-text"
+            />
+            <FormHelperText id="component-error-text">
+              Min 4 characters
+            </FormHelperText>
+          </FormControl>
           <StarRating rating={rating || 0} vote={vote || 0} />
           <Droppable droppableId="listFormsDetailedId">
             {provided => (
@@ -189,7 +230,9 @@ class FormDetail extends Component {
               variant="contained"
               size="medium"
               color="primary"
+              disabled={this.state.error}
               onClick={() => {
+                console.log({ ...form, name: this.state.name });
                 putForm(formId, form);
                 history.push("/");
               }}
@@ -244,7 +287,8 @@ const mapDispatchToProps = {
   deleteField: deleteFormField,
   putForm: putFormAction,
   updateFields,
-  vote: setVote
+  vote: setVote,
+  updateName
 };
 
 export default withRouter(

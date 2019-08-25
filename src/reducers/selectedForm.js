@@ -10,6 +10,7 @@ const ADD_FORM_FIELD = "SELECTED_FORM/ADD_FORM_FIELD";
 const DEL_FORM_FIELD = "SELECTED_FORM/DEL_FORM_FIELD";
 const ADD_HISTORY = "SELECTED_FORM/ADD_HISTORY";
 const UPDATE_FIELDS = "SELECTED_FORM/UPDATE_FIELDS";
+const UPDATE_NAME = "SELECTED_FORM/UPDATE_NAME";
 const VOTE = "RATING/VOTE";
 
 export const REDUCER_NAME = "selectedForm";
@@ -20,6 +21,7 @@ export const addFormField = createAction(ADD_FORM_FIELD);
 export const deleteFormField = createAction(DEL_FORM_FIELD);
 export const addHistory = createAction(ADD_HISTORY);
 export const updateFields = createAction(UPDATE_FIELDS);
+export const updateName = createAction(UPDATE_NAME);
 export const setVote = createAction(VOTE);
 
 const initialState = DEFAULT_FORM;
@@ -46,6 +48,10 @@ export default handleActions(
     [updateFields]: (state, { payload }) => ({
       ...state,
       fields: [...payload]
+    }),
+    [updateName]: (state, { payload }) => ({
+      ...state,
+      name: payload
     }),
     [deleteFormField]: (state, { payload }) => ({
       ...state,

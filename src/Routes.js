@@ -24,7 +24,7 @@ class Routes extends Component {
       <IntlProvider locale={lang} messages={messages[lang]}>
         <AuthProvider>
 
-            <HeaderAppBar setLang={setLang} />
+            <HeaderAppBar setLang={setLang} language={lang} />
             <Switch>
               <Route path="/callback" component={Callback} />
               <Route exact path="/" component={App} />
