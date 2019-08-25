@@ -9,7 +9,8 @@ import {
   fieldTypeLength,
   formSelector,
   resetForm,
-  setForm, updateName
+  setForm,
+  updateName
 } from "../reducers/selectedForm";
 import getFormAction from "../action/getForm";
 import postFormAction from "../action/postForm";
@@ -22,7 +23,14 @@ import CheckMarkPure from "../components/elements/Checkmark";
 import withHOCField from "../components/elements/withHOCField";
 import { FIELD_TYPES } from "../constants/selectedForm";
 import { resetFormsData } from "../reducers/forms";
-import {Button, Container, FormControl, FormHelperText, Input, InputLabel} from "@material-ui/core";
+import {
+  Button,
+  Container,
+  FormControl,
+  FormHelperText,
+  Input,
+  InputLabel
+} from "@material-ui/core";
 
 const Text = withHOCField(TextPure);
 const Dropdown = withHOCField(DropdownPure);
@@ -41,7 +49,7 @@ class FormNew extends Component {
       error: target.value.length < 4
     });
 
-    if(target.value.length > 4) {
+    if (target.value.length > 4) {
       this.props.updateName(target.value);
     }
   };
@@ -76,10 +84,10 @@ class FormNew extends Component {
           <FormControl error={this.state.error}>
             <InputLabel htmlFor="component-error">Name</InputLabel>
             <Input
-                id="component-error"
-                value={this.state.name}
-                onChange={this.handleNameChange}
-                aria-describedby="component-error-text"
+              id="component-error"
+              value={this.state.name}
+              onChange={this.handleNameChange}
+              aria-describedby="component-error-text"
             />
             <FormHelperText id="component-error-text">
               Min 4 characters

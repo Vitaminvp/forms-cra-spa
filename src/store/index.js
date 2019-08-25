@@ -17,15 +17,18 @@ export const configStore = (reducers, middlewares) => {
   // );
 
   const store = createStore(
-      combineReducers(reducers),
-      preLoadedState,
-      applyMiddleware(...middlewares)
+    combineReducers(reducers),
+    preLoadedState,
+    applyMiddleware(...middlewares)
   );
   store.subscribe(
     throttle(() => {
-      saveState({
-        lang: store.getState().lang
-      }, "state");
+      saveState(
+        {
+          lang: store.getState().lang
+        },
+        "state"
+      );
     }, 1000)
   );
   return store;

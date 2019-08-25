@@ -53,12 +53,11 @@ const HeaderAppBar = withAuth(
     function handleMenu(event) {
       setAnchorEl(event.currentTarget);
     }
-    function handleClose(lang="en") {
+    function handleClose(lang = "en") {
       setAnchorEl(null);
-      if(typeof lang === "string" && lang !== language){
+      if (typeof lang === "string" && lang !== language) {
         setLang(lang);
       }
-
     }
     const token = Cookies.getJSON("jwt");
     const user = isAuthorized ? jwt.decode(token) : undefined;

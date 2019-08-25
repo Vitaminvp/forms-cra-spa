@@ -1,19 +1,13 @@
 import React from "react";
 import { uniqueId } from "../../utils";
-import { MAX_FIELDS, MIN_FIELDS } from "../../constants/selectedForm";
+import { MAX_FIELDS } from "../../constants/selectedForm";
 import { Tooltip, IconButton, Divider } from "@material-ui/core";
 import { Delete, AddCircle } from "@material-ui/icons";
 
 const withHOCField = Component => {
   class WithHOC extends React.PureComponent {
     render() {
-      const {
-        field,
-        addField,
-        deleteField,
-        fieldsLength,
-        fieldsTypeLength
-      } = this.props;
+      const { field, addField, deleteField, fieldsLength } = this.props;
       return (
         <div
           style={{
@@ -28,15 +22,19 @@ const withHOCField = Component => {
               <IconButton
                 aria-label="add"
                 onClick={() =>
-                  addField({ ...field, name: `name-${uniqueId() + 10}`, id: `id-${uniqueId()}` })
+                  addField({
+                    ...field,
+                    name: `name-${uniqueId() + 10}`,
+                    id: `id-${uniqueId()}`
+                  })
                 }
               >
                 <AddCircle />
               </IconButton>
             </Tooltip>
           )}
-          {fieldsTypeLength > MIN_FIELDS && (
-            <Tooltip title="Delete">
+          {
+            /*fieldsTypeLength > MIN_FIELDS &&*/ <Tooltip title="Delete">
               <IconButton
                 aria-label="delete"
                 onClick={() => deleteField(field.name)}
@@ -44,13 +42,12 @@ const withHOCField = Component => {
                 <Delete />
               </IconButton>
             </Tooltip>
-          )}
+          }
           <Divider />
         </div>
       );
     }
   }
-
   return WithHOC;
 };
 

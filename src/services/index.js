@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import auth0 from "auth0-js";
 import Cookies from "js-cookie";
 import jwt from "jsonwebtoken";
-import {withRouter} from "react-router-dom";
+import { withRouter } from "react-router-dom";
 
 const { Provider, Consumer: AuthConsumer } = React.createContext({
   isAuthorized: false
@@ -18,7 +18,6 @@ class AuthProvider extends Component {
     this.verifyToken = this.verifyToken.bind(this);
 
     this.state = { isAuthorized: !!this.isAuthenticated() };
-
 
     this.auth0 = new auth0.WebAuth({
       domain: "dev-89anh0xa.eu.auth0.com",
@@ -46,14 +45,13 @@ class AuthProvider extends Component {
       });
     });
 
-
     this.props.history.push("/");
   }
   handleAuthentication() {
     this.auth0.parseHash((err, authResult) => {
       if (authResult && authResult.accessToken && authResult.idToken) {
         this.setState({ isAuthorized: true }, () => {
-            this.setSession(authResult)
+          this.setSession(authResult);
           this.props.history.push("/");
         });
       } else if (err) {
@@ -67,16 +65,14 @@ class AuthProvider extends Component {
     return this.verifyToken(token);
   }
 
-
   verifyToken(token) {
-    if(token){
+    if (token) {
       const decodedToken = jwt.decode(token);
       const expiresAt = decodedToken.exp * 1000;
-      return token && Date.now() < expiresAt ? decodedToken : undefined
+      return token && Date.now() < expiresAt ? decodedToken : undefined;
     }
     return undefined;
   }
-
 
   setSession(authResult) {
     const expiresAt = JSON.stringify(

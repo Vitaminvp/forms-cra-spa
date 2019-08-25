@@ -1,4 +1,10 @@
+body {
+    margin: 0;
+}
 
-h1{
-    color: #f50057;
+h2 {
+  color: #3f51b5;
+}
+h3 {
+  color: #f50057;
 }

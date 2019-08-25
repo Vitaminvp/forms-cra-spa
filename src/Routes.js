@@ -3,8 +3,7 @@ import { connect } from "react-redux";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import HeaderAppBar from "./components/HeaderAppBar";
 import App from "./App";
-import FormNew from "./containers/FormNew";
-import FormDetail from "./containers/FormDetail";
+import FormEdit from "./containers/FormEdit";
 import FormFill from "./containers/FormFill";
 import Page404 from "./components/Page404";
 import { IntlProvider } from "react-intl";
@@ -20,25 +19,23 @@ class Routes extends Component {
   render() {
     const { lang, setLang } = this.props;
     return (
-        <Router>
-      <IntlProvider locale={lang} messages={messages[lang]}>
-        <AuthProvider>
-
+      <Router>
+        <IntlProvider locale={lang} messages={messages[lang]}>
+          <AuthProvider>
             <HeaderAppBar setLang={setLang} language={lang} />
             <Switch>
               <Route path="/callback" component={Callback} />
               <Route exact path="/" component={App} />
-              <Route path="/new" component={FormNew} />
-              <PrivateRoute path="/edit/:formId" component={FormDetail} />
+              <Route path="/new" component={FormEdit} />
+              <PrivateRoute path="/edit/:formId" component={FormEdit} />
               <Route path="/fill/:formId" component={FormFill} />
               <Route path="/login" component={Login} />
               <PrivateRoute path="/profile" component={Profile} />
               <Route component={Page404} />
             </Switch>
-
-        </AuthProvider>
-      </IntlProvider>
-        </Router>
+          </AuthProvider>
+        </IntlProvider>
+      </Router>
     );
   }
 }

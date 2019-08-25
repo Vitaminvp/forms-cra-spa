@@ -38,21 +38,25 @@ import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { FormattedMessage } from "react-intl";
 import StarRating from "../components/StarRating";
 import { ratingSelector, setVote } from "../reducers/selectedForm";
+import AddElementDropDown from "../components/AddElementDropDown";
+import {resetFormsData} from "../reducers/forms";
+import postFormAction from "../action/postForm";
 
 const Text = withHOCField(TextPure);
 const Dropdown = withHOCField(DropdownPure);
 const Number = withHOCField(NumberPure);
 const CheckMark = withHOCField(CheckMarkPure);
 
-class FormDetail extends Component {
+class FormEdit extends Component {
   state = {
     name: this.props.form.name,
-    error: false
+    error: false,
+    edit: !!this.props.match.params.formId
   };
   componentDidMount() {
     const { formId } = this.props.match.params;
 
-    if (!this.props.isFormLoaded) {
+    if (!this.props.isFormLoaded && this.state.edit) {
       this.props.getForm(formId);
     }
   }
@@ -83,7 +87,7 @@ class FormDetail extends Component {
       error: target.value.length < 4
     });
 
-    if(target.value.length > 4) {
+    if (target.value.length > 4) {
       this.props.updateName(target.value);
     }
   };
@@ -101,6 +105,7 @@ class FormDetail extends Component {
       checkMarkFieldsLength,
       fieldsLength,
       putForm,
+      postForm,
       resetLoading,
       rating,
       vote
@@ -137,6 +142,9 @@ class FormDetail extends Component {
             </FormHelperText>
           </FormControl>
           <StarRating rating={rating || 0} vote={vote || 0} />
+
+          <AddElementDropDown addField={addField} fieldsLength={fieldsLength} />
+
           <Droppable droppableId="listFormsDetailedId">
             {provided => (
               <List innerRef={provided.innerRef} {...provided.droppableProps}>
@@ -211,7 +219,11 @@ class FormDetail extends Component {
               </List>
             )}
           </Droppable>
-
+          <AddElementDropDown
+            addField={addField}
+            fieldsLength={fieldsLength}
+            buttonForm={false}
+          />
           <div style={{ margin: "50px 0 30px" }}>
             <Button
               variant="outlined"
@@ -230,14 +242,20 @@ class FormDetail extends Component {
               variant="contained"
               size="medium"
               color="primary"
-              disabled={this.state.error}
+              disabled={this.state.error || fieldsLength <= 0}
               onClick={() => {
-                console.log({ ...form, name: this.state.name });
-                putForm(formId, form);
+
+                if(this.state.edit){
+                  putForm(formId, form);
+                } else {
+                  resetFormsData();
+                  postForm(form);
+                }
                 history.push("/");
+
               }}
             >
-              <FormattedMessage id="update" defaultMessage="Update" />
+              {this.state.edit ? <FormattedMessage id="update" defaultMessage="Update" /> : <FormattedMessage id="save" defaultMessage="Save" />}
             </Button>
           </div>
         </Container>
@@ -246,7 +264,7 @@ class FormDetail extends Component {
   }
 }
 
-FormDetail.propTypes = {
+FormEdit.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func
   }),
@@ -288,12 +306,13 @@ const mapDispatchToProps = {
   putForm: putFormAction,
   updateFields,
   vote: setVote,
-  updateName
+  updateName,
+  postForm: postFormAction,
 };
 
 export default withRouter(
   connect(
     mapStateToProps,
     mapDispatchToProps
-  )(FormDetail)
+  )(FormEdit)
 );

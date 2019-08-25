@@ -7,7 +7,7 @@ import DropdownPure from "./elements/Dropdown";
 import NumberPure from "./elements/Number";
 import CheckMarkPure from "./elements/Checkmark";
 import withHOCField from "./elements/withHOCField";
-import {FIELD_TYPES} from "../constants/selectedForm";
+import { FIELD_TYPES } from "../constants/selectedForm";
 
 const Text = withHOCField(TextPure);
 const Dropdown = withHOCField(DropdownPure);
@@ -26,8 +26,6 @@ const Field = ({
   dropdownFieldsLength,
   checkMarkFieldsLength
 }) => {
-
-
   let Item;
 
   switch (field.type) {
@@ -65,7 +63,7 @@ const Field = ({
       );
       break;
     case FIELD_TYPES.CHECKMARK:
-      Item =  (
+      Item = (
         <CheckMark
           field={field}
           fieldsTypeLength={checkMarkFieldsLength}
@@ -76,7 +74,7 @@ const Field = ({
       );
       break;
     default:
-  Item = <div key={index}>{`Unhandled type: ${field.type}`}</div>;
+      Item = <div key={index}>{`Unhandled type: ${field.type}`}</div>;
   }
 
   return (

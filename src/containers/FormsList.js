@@ -23,10 +23,10 @@ import { withAuth } from "../services";
 import Tooltip from "../components/ToolTip";
 import Pagination from "../components/Pagination";
 import { FORMS_PER_PAGE } from "../constants/common";
-import {loadState, saveState} from "../localStorage";
+import { loadState, saveState } from "../localStorage";
 
 class FormsList extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
 
     const preLoadedState = loadState("pagination");
@@ -39,10 +39,9 @@ class FormsList extends Component {
         search: ""
       };
     } else {
-      this.state ={...preLoadedState}
+      this.state = { ...preLoadedState };
     }
   }
-
 
   onPageChanged = data => {
     const { allForms } = this.state;
@@ -176,7 +175,14 @@ class FormsList extends Component {
             onPageChanged={this.onPageChanged}
           />
 
-          {isAuthorized && <AddForm onAddForm={addForm} val={value} />}
+          {isAuthorized && (
+              <div>
+                <Tooltip text="Add new form">
+                  <AddForm onAddForm={addForm} val={value} />
+                </Tooltip>
+              </div>
+
+          )}
         </Container>
       </DragDropContext>
     );

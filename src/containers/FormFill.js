@@ -50,7 +50,7 @@ class FormFill extends Component {
         }
       });
     }
-  }
+  };
 
   componentDidMount() {
     const { formId } = this.props.match.params;
@@ -101,7 +101,9 @@ class FormFill extends Component {
           }}
         >
           <h1>Form #{formId}</h1>
-          <Tooltip text='Simple tooltip: Header H2'><h2>{form.name}</h2></Tooltip>
+          <Tooltip text="Simple tooltip: Header H2">
+            <h2>{form.name}</h2>
+          </Tooltip>
           <StarRating rating={rating || 0} vote={vote || 0} />
           {form.fields.map((field, key) => {
             const props = {

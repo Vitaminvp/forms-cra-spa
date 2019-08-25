@@ -17,7 +17,7 @@ import {
 } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
 import { History as HistoryIcon } from "@material-ui/icons";
-import {FormattedMessage} from "react-intl";
+import { FormattedMessage } from "react-intl";
 
 const styles = theme => ({
   root: {
@@ -82,7 +82,8 @@ export default function CustomizedDialogs({ history, children, disabled }) {
         style={{ marginRight: 10 }}
       >
         <HistoryIcon />
-        &nbsp;<FormattedMessage id="history" defaultMessage="History" />
+        &nbsp;
+        <FormattedMessage id="history" defaultMessage="History" />
       </Button>
       <Dialog
         onClose={handleClose}

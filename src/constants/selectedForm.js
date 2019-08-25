@@ -12,7 +12,7 @@ export const FIELD_NAMES = {
 };
 
 export const MIN_FIELDS = 1;
-export const MAX_FIELDS = 15;
+export const MAX_FIELDS = 10;
 
 export const DEFAULT_FORM = {
   name: "New Form",
@@ -52,5 +52,5 @@ export const DEFAULT_FORM = {
     }
   ],
   history: [],
-  rating: {votes: 0, rating: 0}
+  rating: { votes: 0, rating: 0 }
 };

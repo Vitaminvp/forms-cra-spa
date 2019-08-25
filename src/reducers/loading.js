@@ -22,8 +22,8 @@ const initialState = {
 export default handleActions(
   {
     [resetLoading]: ({ loading, loaded }, { payload: TAG }) => ({
-        loading: loading.filter(el => el !== TAG),
-        loaded: loaded.filter(el => el !== TAG)
+      loading: loading.filter(el => el !== TAG),
+      loaded: loaded.filter(el => el !== TAG)
     }),
     [startLoading]: ({ loading, loaded }, { payload: TAG }) => ({
       loading: TAG ? [...loading, TAG] : [...loading],

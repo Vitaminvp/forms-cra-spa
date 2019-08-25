@@ -1,9 +1,6 @@
-import thunk from 'redux-thunk';
-import reduxLogger from 'redux-logger';
+import thunk from "redux-thunk";
+import reduxLogger from "redux-logger";
 
-const createMiddlewares = () => [
-  thunk,
-  reduxLogger
-];
+const createMiddlewares = () => [thunk, reduxLogger];
 
 export default createMiddlewares;
