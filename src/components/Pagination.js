@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Button, ButtonGroup } from "@material-ui/core";
+import {FormattedMessage} from "react-intl";
 
 const LEFT_PAGE = "LEFT";
 const RIGHT_PAGE = "RIGHT";
@@ -109,7 +110,7 @@ class Pagination extends Component {
       pageNeighbours = 0
     } = this.props;
 
-    this.pageLimit = typeof pageLimit === "number" ? pageLimit : 30;
+    this.pageLimit = typeof pageLimit === "number" ? pageLimit : 10;
     this.totalRecords = typeof totalRecords === "number" ? totalRecords : 0;
 
     this.pageNeighbours =
@@ -135,14 +136,14 @@ class Pagination extends Component {
           if (page === LEFT_PAGE)
             return (
               <Button key={index} onClick={this.handleMoveLeft}>
-                Previous
+                <FormattedMessage id="previous" defaultMessage="Previous" />
               </Button>
             );
 
           if (page === RIGHT_PAGE)
             return (
               <Button key={index} onClick={this.handleMoveRight}>
-                Next
+                <FormattedMessage id="next" defaultMessage="Next" />
               </Button>
             );
 

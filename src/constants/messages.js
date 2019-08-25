@@ -17,7 +17,9 @@ export default {
     creator: "About Author",
     addElement: "Add Form Element",
     userInfo: "Current user registration information",
-    ownerInfo: "About owner"
+    ownerInfo: "About owner",
+    next: "Next",
+    previous: "Previous"
   },
   ru: {
     title: "Список форм",
@@ -37,7 +39,9 @@ export default {
     creator: "О Создателе",
     addElement: "Добавить элемент формы",
     userInfo: "Регистрационная информация текущего пользователя",
-    ownerInfo: "Информация о разработчике"
+    ownerInfo: "Информация о разработчике",
+    next: "Вперед",
+    previous: "Назад"
   },
   uk: {
     title: "Список форм УКР",
@@ -57,6 +61,8 @@ export default {
     creator: "Про Розробника",
     addElement: "Додати елемент форми",
     userInfo: "Реєстраційна інформація даного користувача",
-    ownerInfo: "Інформація про розробника"
+    ownerInfo: "Інформація про розробника",
+    next: "Далі",
+    previous: "Назад"
   }
 };

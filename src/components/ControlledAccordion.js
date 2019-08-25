@@ -6,7 +6,7 @@ import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
 import Typography from "@material-ui/core/Typography";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Paper from "@material-ui/core/Paper";
-import { ReactComponent as Logo } from "../images/avatar.svg";
+import { ReactComponent as Logo } from "../img/avatar.svg";
 import { FormattedMessage } from "react-intl";
 
 const useStyles = makeStyles(theme => ({

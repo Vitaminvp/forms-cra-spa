@@ -41,7 +41,8 @@ class AuthProvider extends Component {
 
       this.auth0.logout({
         returnTo: "",
-        clientID: "ECT1pZO1AJkk0FgmJCJpjXBQrhXKWCjv"
+        // clientID: "ytWgl3QewGPM7B0zGYjnbMYQiHMCqSY6",
+        clientID: "ECT1pZO1AJkk0FgmJCJpjXBQrhXKWCjv",
       });
     });
 
