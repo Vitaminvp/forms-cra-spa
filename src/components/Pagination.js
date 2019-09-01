@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Button, ButtonGroup } from "@material-ui/core";
-import {FormattedMessage} from "react-intl";
+import { FormattedMessage } from "react-intl";
 
 const LEFT_PAGE = "LEFT";
 const RIGHT_PAGE = "RIGHT";
@@ -21,7 +21,7 @@ const range = (from, to, step = 1) => {
 class Pagination extends Component {
   constructor(props) {
     super(props);
-    this.state = { currentPage: 1 };
+    this.state = { currentPage: this.props.currentPage || 1 };
   }
 
   componentDidMount() {
@@ -57,6 +57,10 @@ class Pagination extends Component {
     evt.preventDefault();
     this.gotoPage(this.state.currentPage + this.pageNeighbours * 2 + 1);
   };
+
+  componentWillReceiveProps(nextProps, nextContext) {
+    if (nextProps.currentPage === 1) this.setState({ currentPage: 1 });
+  }
 
   fetchPageNumbers = () => {
     const totalPages = this.totalPages;

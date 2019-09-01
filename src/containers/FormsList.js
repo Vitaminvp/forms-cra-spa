@@ -35,8 +35,7 @@ class FormsList extends Component {
         allForms: [],
         currentForms: [],
         currentPage: null,
-        totalPages: null,
-        search: ""
+        totalPages: null
       };
     } else {
       this.state = { ...preLoadedState };
@@ -53,9 +52,6 @@ class FormsList extends Component {
     this.setState({ currentPage, currentForms, totalPages });
   };
 
-  // static getDerivedStateFromProps(props, state) {
-  //
-  // }
 
   componentWillReceiveProps(nextProps, nextContext) {
     const { forms } = nextProps;
@@ -68,6 +64,7 @@ class FormsList extends Component {
     }
     this.setState({ allForms: this.props.forms });
   }
+
   onDragEnd = result => {
     const { destination, source } = result;
     console.log({ result });
@@ -119,8 +116,7 @@ class FormsList extends Component {
 
     this.setState({
       allForms: newForms,
-      currentPage: 2,
-      search: e.target.value,
+      currentPage: 1,
       currentForms
     });
   };
@@ -131,7 +127,7 @@ class FormsList extends Component {
 
   render() {
     const { value, addForm, isAuthorized } = this.props;
-    const { allForms, currentForms } = this.state;
+    const { allForms, currentForms, currentPage } = this.state;
 
     const totalForms = allForms.length;
 
@@ -169,6 +165,7 @@ class FormsList extends Component {
           <ShortList forms={currentForms} isAuthorized={isAuthorized} />
 
           <Pagination
+            currentPage={currentPage}
             totalRecords={totalForms}
             pageLimit={FORMS_PER_PAGE}
             pageNeighbours={1}
@@ -176,12 +173,11 @@ class FormsList extends Component {
           />
 
           {isAuthorized && (
-              <div>
-                <Tooltip text="Add new form">
-                  <AddForm onAddForm={addForm} val={value} />
-                </Tooltip>
-              </div>
-
+            <div>
+              <Tooltip text="Add new form">
+                <AddForm onAddForm={addForm} val={value} />
+              </Tooltip>
+            </div>
           )}
         </Container>
       </DragDropContext>
