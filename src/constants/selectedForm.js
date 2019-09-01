@@ -12,6 +12,7 @@ export const FIELD_NAMES = {
 };
 
 export const MIN_FIELDS = 1;
+export const MIN_NAME_LENGTH = 4;
 export const MAX_FIELDS = 10;
 
 export const DEFAULT_FORM = {

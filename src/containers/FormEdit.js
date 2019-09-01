@@ -24,7 +24,7 @@ import NumberPure from "../components/elements/Number";
 import DropdownPure from "../components/elements/Dropdown";
 import CheckMarkPure from "../components/elements/Checkmark";
 import withHOCField from "../components/elements/withHOCField";
-import { FIELD_TYPES } from "../constants/selectedForm";
+import { FIELD_TYPES, MIN_NAME_LENGTH } from "../constants/selectedForm";
 import {
   Container,
   Button,
@@ -42,6 +42,7 @@ import { ratingSelector, setVote } from "../reducers/selectedForm";
 import AddElementDropDown from "../components/AddElementDropDown";
 import { resetFormsData } from "../reducers/forms";
 import postFormAction from "../action/postForm";
+import { editSelector, setEdit } from "../reducers/edit";
 
 const Text = withHOCField(TextPure);
 const Dropdown = withHOCField(DropdownPure);
@@ -50,14 +51,13 @@ const CheckMark = withHOCField(CheckMarkPure);
 
 class FormEdit extends Component {
   state = {
-    error: false,
-    edit: !!this.props.match.params.formId
+    error: false
   };
 
   componentDidMount() {
     const { formId } = this.props.match.params;
     this.defaultName = this.props.name;
-    if (!this.props.isFormLoaded && this.state.edit) {
+    if (!this.props.isFormLoaded && this.props.edit) {
       this.props.getForm(formId);
     }
   }
@@ -80,7 +80,7 @@ class FormEdit extends Component {
 
   handleNameChange = ({ target }) => {
     this.setState({
-      error: target.value.length < 4
+      error: target.value.length < MIN_NAME_LENGTH
     });
     this.props.updateName(target.value);
   };
@@ -103,7 +103,9 @@ class FormEdit extends Component {
       rating,
       vote,
       updateName,
-      name
+      name,
+      edit,
+      setEdit
     } = this.props;
     if (!form) return null;
     const {
@@ -133,7 +135,7 @@ class FormEdit extends Component {
               aria-describedby="component-error-text"
             />
             <FormHelperText id="component-error-text">
-              Min 4 characters
+              Min {MIN_NAME_LENGTH} characters
             </FormHelperText>
           </FormControl>
           <StarRating rating={rating || 0} vote={vote || 0} />
@@ -227,8 +229,9 @@ class FormEdit extends Component {
               style={{ marginRight: 10 }}
               onClick={() => {
                 resetLoading(LOADING_FORM);
-                updateName(this.defaultName);
+                if (name.length < MIN_NAME_LENGTH) updateName(this.defaultName);
                 close();
+                setEdit(false);
                 history.push("/");
               }}
             >
@@ -240,16 +243,17 @@ class FormEdit extends Component {
               color="primary"
               disabled={this.state.error || fieldsLength <= 0}
               onClick={() => {
-                if (this.state.edit) {
+                if (edit) {
                   putForm(formId, form);
                 } else {
                   resetFormsData();
                   postForm(form);
                 }
+                setEdit(false);
                 history.push("/");
               }}
             >
-              {this.state.edit ? (
+              {edit ? (
                 <FormattedMessage id="update" defaultMessage="Update" />
               ) : (
                 <FormattedMessage id="save" defaultMessage="Save" />
@@ -281,7 +285,9 @@ FormEdit.propTypes = {
   vote: PropTypes.func,
   form: PropTypes.object,
   close: PropTypes.func,
-  name: PropTypes.string
+  name: PropTypes.string,
+  edit: PropTypes.bool,
+  setEdit: PropTypes.func
 };
 
 const mapStateToProps = state => ({
@@ -293,7 +299,8 @@ const mapStateToProps = state => ({
   dropdownFieldsLength: fieldTypeLength(state, FIELD_TYPES.DROPDOWN),
   fieldsLength: fieldLength(state),
   rating: ratingSelector(state),
-  name: nameSelector(state)
+  name: nameSelector(state),
+  edit: editSelector(state)
 });
 
 const mapDispatchToProps = {
@@ -307,7 +314,8 @@ const mapDispatchToProps = {
   updateFields,
   vote: setVote,
   updateName,
-  postForm: postFormAction
+  postForm: postFormAction,
+  setEdit
 };
 
 export default withRouter(

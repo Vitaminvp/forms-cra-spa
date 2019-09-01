@@ -24,6 +24,7 @@ import Tooltip from "../components/ToolTip";
 import Pagination from "../components/Pagination";
 import { FORMS_PER_PAGE } from "../constants/common";
 import { loadState, saveState } from "../localStorage";
+import {setEdit} from "../reducers/edit";
 
 class FormsList extends Component {
   constructor(props) {
@@ -129,7 +130,7 @@ class FormsList extends Component {
   }
 
   render() {
-    const { value, addForm, isAuthorized } = this.props;
+    const { value, addForm, isAuthorized, setEdit } = this.props;
     const { allForms, currentForms, currentPage } = this.state;
     const totalForms = allForms.length;
 
@@ -163,7 +164,7 @@ class FormsList extends Component {
             marginBottom: 20
           }}
         >
-          <ShortList forms={currentForms} isAuthorized={isAuthorized} />
+          <ShortList forms={currentForms} isAuthorized={isAuthorized} setEdit={setEdit} />
           {currentForms.length > 0 ? (
             <Pagination
               currentPage={currentPage}
@@ -206,7 +207,8 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = {
   addForm: addFormData,
   getForms: getFormsAction,
-  setFormsData
+  setFormsData,
+  setEdit
 };
 
 export default withAuth(

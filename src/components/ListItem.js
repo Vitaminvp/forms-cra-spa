@@ -13,7 +13,7 @@ import { NavLink, withRouter } from "react-router-dom";
 import { Draggable } from "react-beautiful-dnd";
 
 const ListItemPure = withRouter(
-  ({ id, name, index, history, isAuthorized }) => {
+  ({ id, name, index, history, isAuthorized, setEdit }) => {
     return (
       <Draggable draggableId={id} index={index}>
         {provided => (
@@ -42,6 +42,7 @@ const ListItemPure = withRouter(
                     aria-label="edit"
                     href="#"
                     onClick={e => {
+                      setEdit(true);
                       e.preventDefault();
                       history.push(`/edit/${id}`);
                     }}

@@ -3,7 +3,8 @@ import uniqueId from "lodash/uniqueId";
 
 const getReducerProp = prop => state => get(state, prop, {});
 const getStringProp = prop => state => get(state, prop, "");
+const getBooleanProp = prop => state => get(state, prop, false);
 const getRatingProp = prop => state => get(state, prop, 0);
 const getFields = prop => state => get(state, prop, []);
 
-export { uniqueId, getReducerProp, getFields, getRatingProp, getStringProp };
+export { uniqueId, getReducerProp, getFields, getRatingProp, getStringProp, getBooleanProp };
