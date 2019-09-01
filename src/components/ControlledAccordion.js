@@ -95,7 +95,7 @@ export default function ControlledExpansionPanels({ user }) {
         <ExpansionPanelDetails>
           <Paper className={classes.paper}>
             <div className={classes.cursor}>
-              <Logo />
+              <Logo style={{width: "100%"}}/>
             </div>
           </Paper>
         </ExpansionPanelDetails>
