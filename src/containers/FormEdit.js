@@ -102,7 +102,7 @@ class FormEdit extends Component {
       resetLoading,
       rating,
       vote,
-        updateName,
+      updateName,
       name
     } = this.props;
     if (!form) return null;

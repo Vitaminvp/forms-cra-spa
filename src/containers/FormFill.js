@@ -30,10 +30,7 @@ import { withAuth } from "../services";
 import Tooltip from "../components/ToolTip";
 
 class FormFill extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
+  state = {};
 
   fillState = () => {
     const {

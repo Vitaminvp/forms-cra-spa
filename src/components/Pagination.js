@@ -58,8 +58,11 @@ class Pagination extends Component {
     this.gotoPage(this.state.currentPage + this.pageNeighbours * 2 + 1);
   };
 
-  componentWillReceiveProps(nextProps, nextContext) {
-    if (nextProps.currentPage === 1) this.setState({ currentPage: 1 });
+  static getDerivedStateFromProps(props, state) {
+    if (props.currentPage === 1) {
+      return { currentPage: 1 };
+    }
+    return null;
   }
 
   fetchPageNumbers = () => {

@@ -52,10 +52,13 @@ class FormsList extends Component {
     this.setState({ currentPage, currentForms, totalPages });
   };
 
-
-  componentWillReceiveProps(nextProps, nextContext) {
-    const { forms } = nextProps;
-    this.setState({ allForms: forms });
+  static getDerivedStateFromProps(props, state) {
+    if (!state.allForms.length) {
+      return {
+        allForms: props.forms
+      };
+    }
+    return null;
   }
 
   componentDidMount() {
@@ -128,13 +131,11 @@ class FormsList extends Component {
   render() {
     const { value, addForm, isAuthorized } = this.props;
     const { allForms, currentForms, currentPage } = this.state;
-
     const totalForms = allForms.length;
 
     if (!this.props.isFormsLoaded) {
       return <CircularDeterminate />;
     }
-
     return (
       <DragDropContext onDragEnd={this.onDragEnd}>
         <Tooltip text="Downloading PDF file">
@@ -163,14 +164,15 @@ class FormsList extends Component {
           }}
         >
           <ShortList forms={currentForms} isAuthorized={isAuthorized} />
-
-          <Pagination
-            currentPage={currentPage}
-            totalRecords={totalForms}
-            pageLimit={FORMS_PER_PAGE}
-            pageNeighbours={1}
-            onPageChanged={this.onPageChanged}
-          />
+          {currentForms.length > 0 ? (
+            <Pagination
+              currentPage={currentPage}
+              totalRecords={totalForms}
+              pageLimit={FORMS_PER_PAGE}
+              pageNeighbours={1}
+              onPageChanged={this.onPageChanged}
+            />
+          ) : null}
 
           {isAuthorized && (
             <div>
