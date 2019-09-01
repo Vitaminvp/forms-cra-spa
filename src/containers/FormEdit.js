@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import { nameSelector } from "../reducers/selectedForm";
 
 import {
   addFormField,
@@ -39,7 +40,7 @@ import { FormattedMessage } from "react-intl";
 import StarRating from "../components/StarRating";
 import { ratingSelector, setVote } from "../reducers/selectedForm";
 import AddElementDropDown from "../components/AddElementDropDown";
-import {resetFormsData} from "../reducers/forms";
+import { resetFormsData } from "../reducers/forms";
 import postFormAction from "../action/postForm";
 
 const Text = withHOCField(TextPure);
@@ -49,20 +50,16 @@ const CheckMark = withHOCField(CheckMarkPure);
 
 class FormEdit extends Component {
   state = {
-    name: this.props.form.name,
     error: false,
     edit: !!this.props.match.params.formId
   };
+
   componentDidMount() {
     const { formId } = this.props.match.params;
-
+    this.defaultName = this.props.name;
     if (!this.props.isFormLoaded && this.state.edit) {
       this.props.getForm(formId);
     }
-  }
-
-  componentWillReceiveProps(nextProps, nextContext) {
-    this.setState({ name: nextProps.form.name });
   }
 
   onDragEnd = result => {
@@ -83,13 +80,9 @@ class FormEdit extends Component {
 
   handleNameChange = ({ target }) => {
     this.setState({
-      name: target.value,
       error: target.value.length < 4
     });
-
-    if (target.value.length > 4) {
-      this.props.updateName(target.value);
-    }
+    this.props.updateName(target.value);
   };
   render() {
     const {
@@ -108,7 +101,9 @@ class FormEdit extends Component {
       postForm,
       resetLoading,
       rating,
-      vote
+      vote,
+        updateName,
+      name
     } = this.props;
     if (!form) return null;
     const {
@@ -128,12 +123,12 @@ class FormEdit extends Component {
           }}
         >
           <h1>Form Detail {formId}</h1>
-          <h2>{this.state.name}</h2>
+          <h2>{name}</h2>
           <FormControl error={this.state.error}>
             <InputLabel htmlFor="component-error">Name</InputLabel>
             <Input
               id="component-error"
-              value={this.state.name}
+              value={name}
               onChange={this.handleNameChange}
               aria-describedby="component-error-text"
             />
@@ -232,6 +227,7 @@ class FormEdit extends Component {
               style={{ marginRight: 10 }}
               onClick={() => {
                 resetLoading(LOADING_FORM);
+                updateName(this.defaultName);
                 close();
                 history.push("/");
               }}
@@ -244,18 +240,20 @@ class FormEdit extends Component {
               color="primary"
               disabled={this.state.error || fieldsLength <= 0}
               onClick={() => {
-
-                if(this.state.edit){
+                if (this.state.edit) {
                   putForm(formId, form);
                 } else {
                   resetFormsData();
                   postForm(form);
                 }
                 history.push("/");
-
               }}
             >
-              {this.state.edit ? <FormattedMessage id="update" defaultMessage="Update" /> : <FormattedMessage id="save" defaultMessage="Save" />}
+              {this.state.edit ? (
+                <FormattedMessage id="update" defaultMessage="Update" />
+              ) : (
+                <FormattedMessage id="save" defaultMessage="Save" />
+              )}
             </Button>
           </div>
         </Container>
@@ -282,7 +280,8 @@ FormEdit.propTypes = {
   rating: PropTypes.number,
   vote: PropTypes.func,
   form: PropTypes.object,
-  close: PropTypes.func
+  close: PropTypes.func,
+  name: PropTypes.string
 };
 
 const mapStateToProps = state => ({
@@ -293,7 +292,8 @@ const mapStateToProps = state => ({
   checkMarkFieldsLength: fieldTypeLength(state, FIELD_TYPES.CHECKMARK),
   dropdownFieldsLength: fieldTypeLength(state, FIELD_TYPES.DROPDOWN),
   fieldsLength: fieldLength(state),
-  rating: ratingSelector(state)
+  rating: ratingSelector(state),
+  name: nameSelector(state)
 });
 
 const mapDispatchToProps = {
@@ -307,7 +307,7 @@ const mapDispatchToProps = {
   updateFields,
   vote: setVote,
   updateName,
-  postForm: postFormAction,
+  postForm: postFormAction
 };
 
 export default withRouter(

@@ -1,6 +1,6 @@
 import { handleActions, createAction } from "redux-actions";
 import { createSelector } from "reselect";
-import { getFields, getReducerProp, getRatingProp } from "../utils";
+import { getFields, getReducerProp, getRatingProp, getStringProp } from "../utils";
 import get from "lodash/get";
 import { DEFAULT_FORM } from "../constants/selectedForm";
 
@@ -81,6 +81,11 @@ export const fieldLength = state => get(formFields(state), "length");
 const ratingsSelector = createSelector(
   formSelector,
   getReducerProp("rating")
+);
+
+export const nameSelector = createSelector(
+    formSelector,
+    getStringProp("name")
 );
 
 export const ratingSelector = createSelector(
