@@ -59,8 +59,8 @@ class Pagination extends Component {
   };
 
   static getDerivedStateFromProps(props) {
-    if (props.currentPage === 1) {
-      return { currentPage: 1 };
+    if (props.currentPage) {
+      return { currentPage: props.currentPage };
     }
     return null;
   }
@@ -116,7 +116,6 @@ class Pagination extends Component {
       pageLimit = 30,
       pageNeighbours = 0
     } = this.props;
-
     this.pageLimit = typeof pageLimit === "number" ? pageLimit : 10;
     this.totalRecords = typeof totalRecords === "number" ? totalRecords : 0;
 
@@ -131,7 +130,6 @@ class Pagination extends Component {
 
     const { currentPage } = this.state;
     const pages = this.fetchPageNumbers();
-
     return (
       <ButtonGroup
         style={{ marginTop: 15 }}

@@ -36,7 +36,7 @@ class FormsList extends Component {
         allForms: [],
         currentForms: [],
         currentPage: null,
-        totalPages: null
+        totalPages: null,
       };
     } else {
       this.state = { ...preLoadedState };
@@ -121,7 +121,7 @@ class FormsList extends Component {
     this.setState({
       allForms: newForms,
       currentPage: 1,
-      currentForms
+      currentForms,
     });
   };
 
@@ -133,7 +133,6 @@ class FormsList extends Component {
     const { value, addForm, isAuthorized, setEdit } = this.props;
     const { allForms, currentForms, currentPage } = this.state;
     const totalForms = allForms.length;
-
     if (!this.props.isFormsLoaded) {
       return <CircularDeterminate />;
     }
