@@ -100,7 +100,6 @@ class FormsList extends Component {
       newForms.splice(dest, 0, item[0]);
       this.props.setFormsData(newForms);
     }
-
     const currentItem = newCurrentForms.splice(source.index, 1);
     newCurrentForms.splice(destination.index, 0, currentItem[0]);
 

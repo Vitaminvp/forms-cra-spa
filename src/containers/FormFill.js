@@ -55,14 +55,11 @@ class FormFill extends Component {
     if (!this.props.isFormLoaded) {
       this.props.getForm(formId);
     }
-
     this.fillState();
   }
 
   handleChange = (name, value) => {
-    this.setState({ [name]: value }, () =>
-      console.log("this.state", this.state)
-    );
+    this.setState({ [name]: value });
   };
 
   render() {
